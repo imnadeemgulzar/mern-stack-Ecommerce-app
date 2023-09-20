@@ -1,11 +1,21 @@
+import React, { useEffect, useState } from "react";
+
 import { Link } from "react-router-dom";
-import React from "react";
+import { useAuth } from "../../context/auth";
 
 const Header = () => {
+  //   const [auth, setAuth] = useState(localStorage.getItem("auth"));
+  const { auth, setAuth } = useAuth();
+  useEffect(() => {
+    const localStorageAuth = localStorage.getItem("auth");
+    if (localStorageAuth !== auth) {
+      setAuth(localStorageAuth);
+    }
+  }, [auth, setAuth]);
   return (
     <div>
       <nav className="flex justify-end gap-12 text-gray-100 bg-gray-800">
-        {!localStorage.getItem("auth") ? (
+        {!auth ? (
           <>
             <Link
               to="/login"

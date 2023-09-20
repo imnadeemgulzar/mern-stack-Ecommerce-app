@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { ToastContainer, toast } from "react-toastify";
 
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
@@ -21,7 +22,12 @@ const Register = () => {
         },
       );
       if (res.data.success) {
-        navigate("/login");
+        toast.success(res.data.message);
+        setTimeout(() => {
+          navigate("/login");
+        }, 2000);
+      } else {
+        toast.error(res.data.message);
       }
       console.log(res.data);
     } catch (error) {
@@ -30,7 +36,8 @@ const Register = () => {
   };
   return (
     <div>
-      <h1 className="text-center text-4xl my-12 text-slate-500 font-semibold">
+      <ToastContainer />
+      <h1 className="text-slate-500 my-12 text-4xl font-semibold text-center">
         Registration Form
       </h1>
       <form

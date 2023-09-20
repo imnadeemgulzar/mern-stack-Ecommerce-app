@@ -50,7 +50,10 @@ export const loginController = async (req, res) => {
         user,
       });
     }
-    return res.send({ message: "check the username and password" });
+    return res.send({
+      success: false,
+      message: "username or password didn't match",
+    });
   } catch (error) {
     console.log(error);
   }

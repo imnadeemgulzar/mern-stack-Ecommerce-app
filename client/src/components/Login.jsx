@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { ToastContainer, toast } from "react-toastify";
 
 import axios from "axios";
 import { useAuth } from "../context/auth";
@@ -6,7 +7,7 @@ import { useNavigate } from "react-router-dom";
 
 const Login = () => {
   const navigate = useNavigate();
-  const [auth, setAuth] = useAuth();
+  const { auth, setAuth } = useAuth();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const handleSubmit = async e => {
@@ -16,19 +17,27 @@ const Login = () => {
         email,
         password,
       });
-      setAuth({
-        ...auth,
-        user: res?.data,
-      });
-      localStorage.setItem("auth", JSON.stringify(res?.data));
-      navigate("/");
+      if (res.data.success) {
+        setAuth({
+          ...auth,
+          user: res?.data,
+        });
+        localStorage.setItem("auth", JSON.stringify(res?.data));
+        toast.success(res.data.message);
+        setTimeout(() => {
+          navigate("/");
+        }, 2000);
+      } else {
+        toast.error(res.data.message);
+      }
     } catch (error) {
       console.log(error);
     }
   };
   return (
     <div>
-      <h1 className="text-center text-4xl my-12 text-slate-500 font-semibold">
+      <ToastContainer />
+      <h1 className="text-slate-500 my-12 text-4xl font-semibold text-center">
         Login Form
       </h1>
       <form

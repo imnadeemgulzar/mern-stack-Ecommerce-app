@@ -1,13 +1,17 @@
 import React, { useEffect, useState } from "react";
 
+import { AiOutlineArrowRight } from "react-icons/ai";
 import axios from "axios";
 import { useCart } from "../context/auth";
+import { useNavigate } from "react-router-dom";
 import { useParams } from "react-router-dom";
 
 const Details = () => {
+  const navigate = useNavigate();
   const { cart, addToCart } = useCart();
   const { productId } = useParams();
   const [productData, setProductData] = useState();
+  const [count, setCount] = useState(0);
   const getProduct = async () => {
     try {
       const result = await axios.get(
@@ -29,7 +33,12 @@ const Details = () => {
   const handleAddToCart = () => {
     if (productData) {
       addToCart(productData);
+      setCount(count + 1);
     }
+  };
+
+  const goToCart = () => {
+    navigate("/shop");
   };
 
   return (
@@ -37,7 +46,7 @@ const Details = () => {
       <img
         src={productData?.thumbnail}
         alt="img"
-        className="h-[70%] w-[50%] mx-auto my-4"
+        className="h-[350px] w-[50%] mx-auto my-4"
       />
       <div className=" text-slate-100 border-slate-200 flex items-center justify-between px-4 py-4 my-4 text-xl font-semibold bg-gray-800 border-t-2 rounded-lg">
         <p className="flex justify-between w-1/4 p-4 text-gray-800 bg-gray-200 rounded-lg">
@@ -74,7 +83,7 @@ const Details = () => {
         </p>
       </div>
       <p className="text-slate-800 my-8 text-xl text-center">{`Description: ${productData?.description}`}</p>
-      <div className="flex items-center justify-center">
+      <div className="flex items-center justify-center gap-5">
         <button
           onClick={handleAddToCart}
           className="px-8 py-3 text-xl text-center text-white bg-green-600 rounded-lg"
@@ -83,6 +92,13 @@ const Details = () => {
           <span className="px-3 py-1 ml-8 text-2xl text-white bg-gray-800 rounded-full">
             {cart.length}
           </span>
+        </button>
+        <button
+          onClick={goToCart}
+          className="w-44 flex items-center justify-between px-6 py-3 text-xl text-center text-white bg-blue-500 rounded-lg"
+        >
+          Show Cart
+          <AiOutlineArrowRight />
         </button>
       </div>
     </div>
